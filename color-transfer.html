@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>色值转换</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			font-family: 'Microsoft Yahei', 'Avenir', Arial, Helvetica, sans-serif;
+		}
+
+		body {
+			width: 90%;
+			margin: 0 auto;
+		}
+
+		input[type='text'] {
+			flex: 1;
+			outline: 0;
+			border: solid 1px #666;
+			line-height: 38px;
+			padding-left: 20px;
+		}
+
+		button {
+			margin: 0 10px;
+			padding: 0 10px;
+			background: #fff;
+			cursor: pointer;
+			border: solid 1px rgba(0, 0, 0, .5);
+			outline: 0;
+			white-space: nowrap;
+			color: #333;
+		}
+
+		.color-box {
+			margin: 0 10px;
+			height: 80px;
+		}
+
+		.color-box-title {
+			margin: 10px;
+		}
+
+		.color-box-body {
+			font-size: 20px;
+			line-height: 40px;
+			box-sizing: border-box;
+			display: flex;
+		}
+
+		.input-box {
+			display: inline-block;
+			vertical-align: middle;
+			height: 38px;
+			line-height: 38px;
+			overflow-y: hidden;
+		}
+
+		.input-box-rgb {
+			display: flex;
+		}
+
+		.input-box-rgb input:nth-of-type(3n + 2) {
+			margin: 0 10px;
+		}
+
+		.input-box-hex {
+			display: flex;
+		}
+
+		.color-transfer {
+			display: flex;
+			width: 250px;
+			height: 38px;
+			margin: 0 10px;
+			line-height: 38px;
+		}
+
+		.color-transfer span,
+		.color-transfer select {
+			white-space: nowrap;
+			margin: 0 10px;
+		}
+
+		.color-list {
+			display: block;
+			margin: 50px auto;
+		}
+
+		.color-list-item {
+			display: flex;
+			line-height: 40px;
+			margin-bottom: 1px;
+		}
+
+		.color-list-label {
+			width: 100px;
+			text-align: center;
+		}
+
+		.color-list-span {
+			flex: 1;
+			padding-left: 10px;
+		}
+	</style>
+</head>
+
+<body>
+
+	<dl class="color-box">
+		<dt class="color-box-title">RGB转16进制</dt>
+		<dd class="color-box-body">
+			<div class="input-box input-box-rgb">
+				<input id="js-rgb-input-1" type="text" onkeyup="checkInputInteger(this)" maxlength="3" />
+				<input id="js-rgb-input-2" type="text" onkeyup="checkInputInteger(this)" maxlength="3" />
+				<input id="js-rgb-input-3" type="text" onkeyup="checkInputInteger(this)" maxlength="3" />
+			</div>
+
+			<button id="js-rgb-btn">转换</button>
+			<span class="display-text" id="js-rgb-text"></span>
+		</dd>
+	</dl>
+
+	<dl class="color-box">
+		<dt class="color-box-title">16进制转RGB</dt>
+		<dd class="color-box-body">
+			<div class="input-box input-box-hex">
+				<input id="js-hex-input" type="text" onkeyup="checkInputHex(this)" maxlength="6" />
+			</div>
+
+			<button id="js-hex-btn">转换</button>
+			<span class="display-text" id="js-hex-text"></span>
+		</dd>
+	</dl>
+
+	<div class="color-transfer">
+		<input id="color-transfer-start" type="text" /><span>-</span>
+		<input id="color-transfer-end" type="text" />
+		<span>个数</span>
+		<select onchange="handleColor()" id="color-transfer-count">
+			<option value="10">10</option>
+			<option value="20">20</option>
+			<option value="50">50</option>
+			<option value="100">100</option>
+		</select>
+		<button id='color-transfer-btn' onclick="handleColor()">转换</button>
+	</div>
+
+	<div id='js-color-list' class="color-list"></div>
+
+	<script>
+		function getElementById(id) {
+			return document.getElementById(id)
+		}
+
+		function transferHexToInteger(data, start, end, hex) {
+			return parseInt(data.slice(start, end), hex)
+		}
+
+		function transferIntegerToHex(data) {
+			return data == 0 ? '00' : parseInt(data, 10).toString(16)
+		}
+
+		function checkInputInteger(event) {
+			let value = event.value.trim()
+			if (!value) return
+
+			event.value = value == 0 ? 0 : value
+			if (!/^[0-9]/g.test(value)) {
+				event.value = event.value.replace(/^[0-9]/g, '')
+			}
+		}
+
+		function checkInputHex(event) {
+			let value = event.value.trim()
+			if (!value) return
+
+			if (!/^[0-9a-f]/g.test(value)) {
+				event.value = event.value.replace(/^[0-9a-f]/g, '')
+			}
+		}
+
+		function integerToString(data) {
+
+			if (data == 0) return '00'
+
+			if (parseInt(data, 10) < 16) {
+				return '0' + parseInt(data, 10).toString(16)
+			}
+			return parseInt(data, 10).toString(16)
+		}
+
+		function uniqueColorFormat(color) {
+			let texts = []
+			let value = color
+			if (color.length == 3) {
+				for (let i = 0; i < 3; i++) {
+					texts[i] = color.slice(i, i + 1) + color.slice(i, i + 1)
+				}
+				value = texts.join('')
+			}
+
+			return value
+		}
+
+		let input = {
+			hexInput: getElementById('js-hex-input'),
+			rgbInput1: getElementById('js-rgb-input-1'),
+			rgbInput2: getElementById('js-rgb-input-2'),
+			rgbInput3: getElementById('js-rgb-input-3'),
+		}
+
+		let btn = {
+			rgbBtn: getElementById('js-rgb-btn'),
+			hexBtn: getElementById('js-hex-btn'),
+		}
+		let text = {
+			hexText: getElementById('js-hex-text'),
+			rgbText: getElementById('js-rgb-text'),
+		}
+
+		btn.hexBtn.onclick = function () {
+			let value = input.hexInput.value.trim()
+			if (!value || (value.length != 3 && value.length != 6)) return
+
+			value = uniqueColorFormat(value)
+			let data = []
+			for (let i = 0; i < 3; i++) {
+				data[i] = transferHexToInteger(value, i * 2, i * 2 + 2, 16)
+			}
+			text.hexText.innerHTML = data.join(',')
+			text.hexText.style.color = '#' + value
+		}
+
+		btn.rgbBtn.onclick = function () {
+			let rgbInput1 = input.rgbInput1.value.trim()
+			let rgbInput2 = input.rgbInput2.value.trim()
+			let rgbInput3 = input.rgbInput3.value.trim()
+
+			if (!rgbInput1 || !rgbInput2 || !rgbInput3) return
+
+			let value = '#' + transferIntegerToHex(rgbInput1) + transferIntegerToHex(rgbInput2) + transferIntegerToHex(
+				rgbInput3)
+			text.rgbText.innerHTML = value
+			text.rgbText.style.color = value
+		}
+
+		let transfer = {
+			start: getElementById('color-transfer-start'),
+			end: getElementById('color-transfer-end'),
+			count: getElementById('color-transfer-count')
+		}
+
+		let container = getElementById('js-color-list')
+		let color = {
+			start: 'ff0000',
+			end: 'ffffff'
+		}
+		transfer.start.value = color.start
+		transfer.end.value = color.end
+
+		function handleColor() {
+			let start = transfer.start.value.trim()
+			let end = transfer.end.value.trim()
+
+			color = {
+				start: uniqueColorFormat(start),
+				end: uniqueColorFormat(end)
+			}
+			renderColorList(color, transfer.count.value || 10)
+		}
+
+		function renderColorList(color, stepLen) {
+			let colors = []
+			let steps = []
+			let begins = []
+			container.innerHTML = ''
+
+			for (let i = 0; i < 3; i++) {
+				let start = i * 2
+				let end = start + 2
+				begins[i] = transferHexToInteger(color.start, start, end, 16)
+				steps[i] = (transferHexToInteger(color.end, start, end, 16) - begins[i]) / stepLen
+			}
+
+			for (let i = 0; i < stepLen; i++) {
+				let list = ['#']
+				for (let index = 1; index < 4; index++) {
+					list[index] = integerToString(begins[index - 1] + i * steps[index - 1])
+				}
+
+				colors[i] = list.join('')
+
+				let body = document.createElement('li')
+				body.className = 'color-list-item'
+
+				let label = document.createElement('label')
+				label.className = 'color-list-label'
+				label.innerHTML = colors[i]
+
+				let span = document.createElement('span')
+				span.className = 'color-list-span'
+				span.style.backgroundColor = colors[i]
+				span.innerHTML = colors[i]
+
+				body.appendChild(label)
+				body.appendChild(span)
+				container.appendChild(body)
+			}
+		}
+		renderColorList(color, 100)
+	</script>
+</body>
+
+</html>
