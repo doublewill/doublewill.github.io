@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>音频视频采集</title>
+	<style>
+		#img-list img {
+			width: 33.33%;
+			vertical-align: middle;
+		}
+
+	</style>
+</head>
+
+<body>
+	<div id="container" class="container">
+		<video id="js-video"></video>
+		<canvas id="js-canvas" style="display:none"></canvas>
+		<div>
+			<button onclick="start()">开始录视频</button>
+			<button onclick="stop()">结束录视频</button>
+			<button onclick="capture()">拍照</button>
+			<button onclick="remove()">清空</button>
+		</div>
+	</div>
+	<div id="img-list"></div>
+	<script>
+		function $(id) {
+			return document.getElementById(id)
+		}
+		let container = $('container')
+		let rect = container.getBoundingClientRect()
+		let size = {
+			width: 480,
+			height: 320
+		}
+		let videoEl = $('js-video')
+		let canvasEl = $('js-canvas')
+		let imgList = $('img-list')
+		let mediaRecorder = null
+
+		canvasEl.width = size.width
+		canvasEl.height = size.height
+		videoEl.style.width = size.width + 'px'
+		videoEl.style.height = size.height + 'px'
+		imgList.style.width = size.width + 'px'
+		imgList.style.height = size.height + 'px'
+
+		let context = canvasEl.getContext('2d')
+
+		function getUserMedia(constrains, success, error) {
+			if (navigator.mediaDevices.getUserMedia) { //最新标准API
+				navigator.mediaDevices.getUserMedia(constrains).then(success).catch(error)
+			} else if (navigator.webkitGetUserMedia) { //webkit内核浏览器
+				navigator.webkitGetUserMedia(constrains).then(success).catch(error);
+			} else if (navigator.mozGetUserMedia) { //Firefox浏览器
+				navagator.mozGetUserMedia(constrains).then(success).catch(error);
+			} else if (navigator.getUserMedia) { //旧版API
+				navigator.getUserMedia(constrains).then(success).catch(error);
+			}
+		}
+
+		function start() {
+			console.log('start')
+			mediaRecorder.start()
+		}
+
+		function stop() {
+			console.log('stop')			
+			mediaRecorder.stop()
+		}
+
+		function remove() {
+			imgList.innerHTML = ''
+		}
+
+		function capture() {
+			context.drawImage(videoEl, 0, 0, size.width, size.height)
+			let img = document.createElement('img')
+			img.src = canvasEl.toDataURL()
+			imgList.appendChild(img)
+		}
+
+		function success(stream) {
+			mediaRecorder = new MediaRecorder(stream, {
+				audioBitsPerSecond: 128000,
+				videoBitsPerSecond: 100000,
+				mimeType: 'video/webm;codecs=h264'
+			})
+
+
+			mediaRecorder.ondataavailable = function (e) {
+				console.log(e.currentTarget.state)
+				if (e.currentTarget.state == 'inactive') {
+					var blob = new Blob([e.data], {
+						'type': 'video/mp4'
+					})
+					let a = document.createElement('a')
+					a.href = URL.createObjectURL(blob)
+					a.download = new Date().getTime() + 'play.mp4'
+					a.click()
+				}
+			}
+
+			videoEl.srcObject = stream
+			videoEl.play()
+		}
+
+		function error(e) {
+			console.log(e)
+		}
+
+		getUserMedia({
+			audio: true,
+			video: true
+		}, success, error)
+	</script>
+</body>
+</html>
