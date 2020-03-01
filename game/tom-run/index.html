@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Tom 快跑</title>
+	<style>
+	 .container {
+			border: solid 1px #ddd;
+		}
+	</style>
+</head>
+<body>
+	<div id="container" class="container" style="height: 100vh"></div>
+
+	<script>
+		let el = document.getElementById('container')
+		let rect = el.getBoundingClientRect()
+
+		let size = {
+			width: rect.width,
+			height: rect.height
+		}
+		let tomCat = document.getElementById('tom-cat')
+		let canvas = document.createElement('canvas')
+		el.appendChild(canvas)		
+		canvas.width = size.width
+		canvas.height = size.height
+		let context = canvas.getContext('2d')
+		const clear =()=>{
+			context.clearRect(0, 0, size.width, size.height)
+		}
+		clear()
+		let cat = {
+			src: './th.jfif',
+			width: 90,
+			height: 80
+		}
+
+		window.addEventListener('resize', function(){
+			rect = el.getBoundingClientRect()
+			size = {
+				width: rect.width,
+				height: rect.height
+			}
+			canvas.width = size.width
+			canvas.height = size.height
+			rows = Math.floor(size.height / cat.height)
+		 cols = Math.floor(size.width / cat.width)
+		})
+
+		let rows = Math.floor(size.height / cat.height)
+		let cols = Math.floor(size.width / cat.width)
+		let posX = 0
+		let posY = 0
+		const printCat = (x, y)=> {
+ 			let img = new Image()
+				img.src = cat.src
+				img.width = cat.width
+				img.height = cat.height
+				img.onload = function(e) {
+					context.drawImage(img, x * cat.width, y * cat.height, cat.width, cat.height)			
+				}
+		}
+		let drawCat = setInterval(()=> {
+			if (posX == cols) {
+				if (posY == rows - 1) {
+					posX = 0
+					posY = 0
+					printCat(posX, posY)
+					// clearInterval(drawCat)
+					return
+				}
+				posX = 0
+				posY++
+				clear()
+				printCat(posX, posY)
+				return
+			}
+			clear()
+			printCat(posX, posY)
+
+			posX++
+		}, 200)
+	</script>
+	
+</body>
+</html>

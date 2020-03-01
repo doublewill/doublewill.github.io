@@ -1,0 +1,46 @@
+
+* {
+  margin: 0;
+}
+
+body {
+  min-width: 1000px;
+}
+
+video {
+  object-fit: fill;
+}
+
+.container {
+  width: 1000px;
+  margin: 0 auto;
+}
+
+button {
+  border: 0;
+  outline: 0;
+}
+
+.btn-list {
+  font-size: 0;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0 10px;
+  min-width: 80px;
+  border-radius: 4px;
+  font-size: 14px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 30px;
+  cursor: pointer;
+}
+
+.btn + .btn {
+  margin-left: 10px;
+}
+.btn-danger {
+  background: #1890ff;
+  color: #fff;
+}
