@@ -3,16 +3,15 @@
   margin: 0;
 }
 
-body {
-  min-width: 1000px;
-}
-
 video {
+  display: block;
+  width: 100%;
+  max-width: 400px;
   object-fit: fill;
 }
 
 .container {
-  width: 1000px;
+  width: 80%;
   margin: 0 auto;
 }
 
@@ -23,6 +22,7 @@ button {
 
 .btn-list {
   font-size: 0;
+  margin-top: 10px;
 }
 
 .btn {
