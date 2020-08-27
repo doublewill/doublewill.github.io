@@ -17,6 +17,22 @@
   <body>
     <div id="js-canvas"></div>
     <script>
+      const fontVo = {
+        rome: [
+          "I",
+          "II",
+          "III",
+          "IV",
+          "V",
+          "VI",
+          "VII",
+          "VIII",
+          "IX",
+          "X",
+          "XI",
+          "XII",
+        ],
+      };
       let container = document.getElementById("js-canvas");
       let canvas = document.createElement("canvas");
       let rect = container.getBoundingClientRect();
@@ -42,7 +58,19 @@
         context.save();
         context.lineWidth = 4;
         context.beginPath();
+        let gradient = context.createRadialGradient(
+          0,
+          0,
+          10,
+          0,
+          0,
+          width / 2 - 2
+        );
+        gradient.addColorStop(0, "#fff");
+        gradient.addColorStop(1, "#3d7e9a");
+        context.fillStyle = gradient;
         context.arc(0, 0, width / 2 - 2, 0, 2 * PI, false);
+        context.fill();
         context.closePath();
         context.stroke();
         context.restore();
@@ -81,6 +109,7 @@
           context.closePath();
           context.restore();
         }
+        container.style.backgroundImage = 'url(' + canvas.toDataURL() + ')'
       }
 
       function tick(time) {
@@ -90,24 +119,23 @@
         minute += second / 60;
         //时针
         context.save();
-        context.strokeStyle = "#f00"
-        context.rotate(hour * PI / 6);
+        context.strokeStyle = "#f00";
+        context.rotate((hour * PI) / 6);
         context.lineWidth = 6;
         context.beginPath();
-        context.moveTo(0, 0);
+        context.moveTo(0, 20);
         context.lineTo(0, -width / 2 + 60);
         context.closePath();
         context.stroke();
         context.restore();
 
-
         //分针
         context.save();
-        context.strokeStyle = "#00f"        
+        context.strokeStyle = "#00f";
         context.rotate((minute * 6 * PI) / 180);
         context.lineWidth = 4;
         context.beginPath();
-        context.moveTo(0, 0);
+        context.moveTo(0, 20);
         context.lineTo(0, -width / 2 + 40);
         context.stroke();
         context.restore();
@@ -117,10 +145,26 @@
         context.rotate((second * 6 * PI) / 180);
         context.lineWidth = 2;
         context.beginPath();
-        context.moveTo(0, 0);
+        context.moveTo(0, 20);
         context.lineTo(0, -width / 2 + 20);
         context.stroke();
+
+        context.save();
+        context.beginPath();
+        context.fillStyle = "#000";
+        context.arc(0, -width / 2 + 50, 6, 0, PI * 2);
+        context.fill();
         context.restore();
+
+        context.restore();
+
+        context.save();
+        context.beginPath();
+        context.fillStyle = "#000";
+        context.arc(0, 0, 8, 0, PI * 2);
+        context.fill();
+        context.restore();
+
       }
       drawTicks();
 
@@ -134,7 +178,6 @@
       setInterval(() => {
         let date = new Date();
         context.clearRect(-width / 2, -height / 2, width, height);
-        drawTicks();
         tick({
           hour: date.getHours(),
           minute: date.getMinutes(),
