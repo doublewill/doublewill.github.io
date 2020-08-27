@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #js-canvas {
+        width: 300px;
+        height: 300px;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: 100% 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="js-canvas"></div>
+    <script>
+      let container = document.getElementById("js-canvas");
+      let canvas = document.createElement("canvas");
+      let rect = container.getBoundingClientRect();
+      container.appendChild(canvas);
+      let context = canvas.getContext("2d");
+
+      const PI = Math.PI;
+      let width = rect.width,
+        height = rect.height;
+      let center = {
+        x: width / 2,
+        y: height / 2,
+      };
+
+      canvas.width = width;
+      canvas.height = height;
+      context.clearRect(0, 0, width, height);
+      context.translate(center.x, center.y);
+      context.font =
+        "30px/30px PingFangSC-Regular,Helvetica,Arial,Microsoft Yahei,sans-serif";
+
+      function drawTicks() {
+        context.save();
+        context.lineWidth = 4;
+        context.beginPath();
+        context.arc(0, 0, width / 2 - 2, 0, 2 * PI, false);
+        context.closePath();
+        context.stroke();
+        context.restore();
+
+        context.save();
+        for (let i = 0; i < 60; i++) {
+          context.beginPath();
+          context.moveTo(0, 0);
+          if (i % 5 === 0) {
+            context.lineWidth = 2;
+            context.moveTo(0, -width / 2 + 15);
+          } else {
+            context.lineWidth = 1;
+            context.moveTo(0, -width / 2 + 10);
+          }
+          context.lineTo(0, -width / 2);
+          context.closePath();
+          context.stroke();
+          context.restore();
+          context.rotate(PI / 30);
+        }
+
+        let textRadius = (width / 2) * 0.7;
+        let offset = ((PI / 2) * 2) / 3;
+        for (let i = 0; i < 12; i++) {
+          context.save();
+          context.textAlign = "center";
+          context.textBaseline = "middle";
+          let deg = (i * PI) / 6;
+          let pos = {
+            x: textRadius * Math.cos(deg - offset),
+            y: textRadius * Math.sin(deg - offset),
+          };
+
+          context.fillText(i + 1, pos.x, pos.y);
+          context.closePath();
+          context.restore();
+        }
+      }
+
+      function tick(time) {
+        let { hour, minute, second } = time;
+        hour += minute / 60;
+        hour = hour >= 12 ? hour - 12 : hour;
+        minute += second / 60;
+        //时针
+        context.save();
+        context.strokeStyle = "#f00"
+        context.rotate(hour * PI / 6);
+        context.lineWidth = 6;
+        context.beginPath();
+        context.moveTo(0, 0);
+        context.lineTo(0, -width / 2 + 60);
+        context.closePath();
+        context.stroke();
+        context.restore();
+
+
+        //分针
+        context.save();
+        context.strokeStyle = "#00f"        
+        context.rotate((minute * 6 * PI) / 180);
+        context.lineWidth = 4;
+        context.beginPath();
+        context.moveTo(0, 0);
+        context.lineTo(0, -width / 2 + 40);
+        context.stroke();
+        context.restore();
+
+        //秒针
+        context.save();
+        context.rotate((second * 6 * PI) / 180);
+        context.lineWidth = 2;
+        context.beginPath();
+        context.moveTo(0, 0);
+        context.lineTo(0, -width / 2 + 20);
+        context.stroke();
+        context.restore();
+      }
+      drawTicks();
+
+      let date = new Date();
+      tick({
+        hour: date.getHours(),
+        minute: date.getMinutes(),
+        second: date.getSeconds(),
+      });
+
+      setInterval(() => {
+        let date = new Date();
+        context.clearRect(-width / 2, -height / 2, width, height);
+        drawTicks();
+        tick({
+          hour: date.getHours(),
+          minute: date.getMinutes(),
+          second: date.getSeconds(),
+        });
+      }, 1000);
+    </script>
+  </body>
+</html>
