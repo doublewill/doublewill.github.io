@@ -1,1 +1,105 @@
-.page-header{padding:2rem 6rem;color:#fff;text-align:center;background-color:#159957;background-image:linear-gradient(120deg,#155799,#159957)}.project-name{margin-top:0;margin-bottom:.1rem;font-size:100px}.projects-header{margin:10px 0 20px;font-size:16px;border-bottom:solid 2px #169fe6}.projects-header span{display:inline-block;position:relative;background:#169fe6;color:#fff;padding:0 10px;line-height:30px}.projects-header span::after{content:'';position:absolute;top:0;left:100%;border:solid 15px;border-color:transparent transparent #169fe6 #169fe6}.project-list{font-size:0}.project-list::after{content:'';clear:both;display:block}.project-list-item{float:left;width:31.3%;margin-left:3%;font-size:14px;box-sizing:border-box}.project-list-item:first-of-type{margin-left:0}.project-list-item img{display:block;width:150px;margin:0 auto}.article-list{padding:0;list-style-position:inside;list-style-type:disc}.article-list-item{line-height:40px;border-bottom:solid 1px #ddd}
+.page-header {
+  position: relative;
+  padding: 0 6rem;
+  color: #fff;
+  text-align: center;
+  background-color: #159957;
+  background-image: linear-gradient(120deg, #155799, #159957);
+  animation: slide-header infinite 10s;
+}
+@keyframes slide-header {
+    0% {
+        background-image: linear-gradient(120deg, #155799, #159957);
+    }
+    50% {
+        background-image: linear-gradient(90deg,#159957, #155799);
+    }    
+    100% {
+        background-image: linear-gradient(120deg, #155799, #159957);
+    }
+}
+.particles {
+    height: 360px;
+}
+.project-name {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 0.1rem;
+  font-size: 100px;
+}
+.projects-header {
+  margin: 10px 0 20px;
+  font-size: 16px;
+  border-bottom: solid 2px #169fe6;
+}
+.projects-header span {
+  display: inline-block;
+  position: relative;
+  background: #169fe6;
+  color: #fff;
+  padding: 0 10px;
+  line-height: 30px;
+}
+.projects-header span::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 100%;
+  border: solid 15px;
+  border-color: transparent transparent #169fe6 #169fe6;
+}
+.project-list {
+  font-size: 0;
+}
+.project-list::after {
+  content: "";
+  clear: both;
+  display: block;
+}
+.project-list-item {
+  float: left;
+  width: 31.3%;
+  margin-left: 3%;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+.project-list-item:first-of-type {
+  margin-left: 0;
+}
+.project-list-item img {
+  display: block;
+  width: 150px;
+  margin: 0 auto;
+}
+.article-list {
+  padding: 0;
+  list-style-position: inside;
+  list-style-type: disc;
+}
+.article-list-item {
+  line-height: 40px;
+  border-bottom: solid 1px #ddd;
+}
+
+.slideBox{ width:100%; height:230px; overflow:hidden; position:relative; border:1px solid #ddd;  }
+.slideBox .hd{ height:15px; overflow:hidden; position:absolute; right:5px; bottom:5px; z-index:1; }
+.slideBox .hd ul{ overflow:hidden; zoom:1; float:left;  }
+.slideBox .hd ul li{ float:left; margin-right:2px;  width:15px; height:15px; line-height:14px; text-align:center; background:#fff; cursor:pointer; }
+.slideBox .hd ul li.on{ background:#f00; color:#fff; }
+.slideBox .bd{ position:relative; height:100%; z-index:0;   }
+.slideBox .bd li{ zoom:1; vertical-align:middle; text-align: center; }
+.slideBox .bd img{ width:450px; height:230px; display:block;  }
+
+/* 下面是前/后按钮代码，如果不需要删除即可 */
+.slideBox .prev,
+.slideBox .next{ position:absolute; left:3%; top:50%; margin-top:-25px; display:block; width:32px; height:40px; background:url(../images/slider-arrow.png) -110px 5px no-repeat; filter:alpha(opacity=50);opacity:0.5;   }
+.slideBox .next{ left:auto; right:3%; background-position:8px 5px; }
+.slideBox .prev:hover,
+.slideBox .next:hover{ filter:alpha(opacity=100);opacity:1;  }
+.slideBox .prevStop{ display:none;  }
+.slideBox .nextStop{ display:none;  }
