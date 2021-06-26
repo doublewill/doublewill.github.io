@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.js"></script>
+    <style>
+      :root {
+        --blue: #007bff;
+        --indigo: #6610f2;
+        --purple: #6f42c1;
+        --pink: #e83e8c;
+        --red: #dc3545;
+        --orange: #fd7e14;
+        --yellow: #ffc107;
+        --green: #28a745;
+        --teal: #20c997;
+        --cyan: #17a2b8;
+        --white: #fff;
+        --gray: #6c757d;
+        --gray-dark: #343a40;
+        --primary: #007bff;
+        --secondary: #6c757d;
+        --success: #28a745;
+        --info: #17a2b8;
+        --warning: #ffc107;
+        --danger: #dc3545;
+        --light: #f8f9fa;
+        --dark: #343a40;
+        --kpmg-blue: #00338d;
+        --gray-96: #f6f6f6;
+        --kpmg-light-purple: #6d2077;
+        --kpmg-light-sky-blue: #e5eff7;
+        --gray-87: #dedede;
+        --kpmg-green: #00a3a1;
+        --breakpoint-sm: 0;
+        --breakpoint-lg: 641px;
+        --breakpoint-xl: 1101px;
+        --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
+          "Segoe UI Emoji", "Segoe UI Symbol";
+        --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        padding: --small;
+      }
+      .container {
+        width: 90%;
+        margin: 10px auto;
+      }
+      .container a {
+        display: inline-block;
+        margin-right: 20px;
+        padding: 0 10px;
+        background: #20c997;
+        border-radius: 4px;
+        line-height: 30px;
+        color: #fff;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      .container dt {
+        margin: 10px 0;
+        padding-left: 10px;
+        border-left: solid 4px #20c997;
+      }
+      .container dd {
+        padding: 10px 0;
+      }
+      .container-links {
+        padding: 5px 20px;
+        border-radius: 4px;
+        box-shadow: 0 0 6px rgba(127, 127, 127, 0.8);
+      }
+      .container-links + .container-links {
+        margin-top: 20px;
+        border-top: solid 1px #eee;
+      }
+    </style>
+    <title>doublewill 网页导航</title>
+  </head>
+  <body>
+    <div id="app" class="container">
+      <dl class="container-links" v-for="item in linkList">
+        <dt>{{ item.name }}</dt>
+        <dd>
+          <a v-for="link in item.links" :href="link.url" target="_blank"
+            >{{ link.name }}</a
+          >
+        </dd>
+      </dl>
+    </div>
+
+    <script>
+      new Vue({
+        el: "#app",
+        data() {
+          return {
+            linkList: [
+              {
+                name: "搜索工具",
+                links: [
+                  {
+                    name: "百度",
+                    url: "https://www.baidu.com/",
+                  },
+                  {
+                    name: "bing",
+                    url: "https://cn.bing.com/",
+                  },
+                  {
+                    name: "mooc",
+                    url: "https://www.icourse163.org/",
+                  },
+                ],
+              },
+              {
+                name: "脚手架",
+                links: [
+                  {
+                    name: "element-ui",
+                    url:
+                      "https://element.eleme.cn/#/zh-CN/component/installation",
+                  },
+                ],
+              },
+              {
+                name: "框架指导",
+                links: [
+                  {
+                    name: "Vue",
+                    url: "https://cn.vuejs.org/v2/guide/",
+                  },
+                  {
+                    name: "React",
+                    url: "https://react.docschina.org/tutorial/tutorial.html",
+                  },
+                ],
+              },
+
+              {
+                name: "开发工具",
+                links: [
+                  {
+                    name: "Bootcdn",
+                    url: "https://www.bootcdn.cn/",
+                  },
+                  {
+                    name: "Lodash",
+                    url: "https://www.lodashjs.com/",
+                  },
+                  {
+                    name: "Mockjs",
+                    url: "http://mockjs.com/",
+                  },
+                  {
+                    name: "webpackjs",
+                    url: "https://www.webpackjs.com/concepts/",
+                  },
+                ],
+              },
+              {
+                name: "本地开发工具",
+                links: [
+                  {
+                    name: "localhost:8000",
+                    url: "http://localhost:8000/",
+                  },
+                ],
+              },
+            ],
+          };
+        },
+        methods: {},
+      });
+    </script>
+  </body>
+</html>
